@@ -2,39 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cannon : TankComponent
-{
+public class Cannon : TankComponent {
 
-	[SerializeField] private float reload = 5;
+	private bool isReloading;
+
+	[SerializeField] private float reloadTime = 5;
 	float shotTimeStamp = 0;
 
 	[SerializeField] private Vector3 gunPos;
-	[SerializeField] private Vector3 gunRecoilPos = new Vector3(0, 0, 0.2f);
+	[SerializeField] private Vector3 gunRecoilPos = new Vector3 (0, 0, 0.2f);
 
-	private void Update()
-	{
-		Shoot();
+	public bool IsReloading { get { return isReloading; } }
+
+	private void Update () {
+		Shoot ();
 	}
 
-	public void Shoot()
-	{
-		if (!canShoot)
+	public void Shoot () {
+		if (!canShoot || isReloading)
 			return;
 
-		if (Input.GetAxis("Fire1") == 1)
-		{
-			if ((Time.timeSinceLevelLoad) > shotTimeStamp + reload)
-			{
+		if (Input.GetAxis ("Fire1") == 1) {
+			if ((Time.timeSinceLevelLoad) > shotTimeStamp + reloadTime) {
 				shotTimeStamp = Time.timeSinceLevelLoad;
-				StartCoroutine(GunRecoil());
+				StartCoroutine (GunRecoil ());
 
-
-				Ray ray = new Ray(muzzle.position, gun.forward * 1000);
+				Ray ray = new Ray (muzzle.position, gun.forward * 1000);
 				RaycastHit raycastHit;
-				if (Physics.Raycast(ray, out raycastHit, 1000.0f))
-				{
-					Debug.DrawRay(muzzle.position, gun.forward * 1000, Color.red, 5);
-					GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+				if (Physics.Raycast (ray, out raycastHit, 1000.0f)) {
+					Debug.DrawRay (muzzle.position, gun.forward * 1000, Color.red, 5);
+					GameObject sphere = GameObject.CreatePrimitive (PrimitiveType.Sphere);
 					sphere.transform.position = raycastHit.point;
 				}
 			}
@@ -46,21 +43,28 @@ public class Cannon : TankComponent
 		}
 	}
 
-	private IEnumerator GunRecoil()
-	{
+	private IEnumerator ReloadTimer () {
+		isReloading = true;
+		float t = 0;
+		while (t <= reloadTime) {
+			t += time.deltaTime;
+			yield return null;
+		}
+		isReloading = false;
+	}
+
+	private IEnumerator GunRecoil () {
 		float t;
 		t = 0;
-		while (t <= 1)
-		{
+		while (t <= 1) {
 			t += Time.deltaTime * 10;
-			gun.localPosition = Vector3.Lerp(gunPos, gunRecoilPos, t);
+			gun.localPosition = Vector3.Lerp (gunPos, gunRecoilPos, t);
 			yield return null;
 		}
 		t = 0;
-		while (t <= 1)
-		{
+		while (t <= 1) {
 			t += Time.deltaTime;
-			gun.localPosition = Vector3.Lerp(gunRecoilPos, gunPos, t);
+			gun.localPosition = Vector3.Lerp (gunRecoilPos, gunPos, t);
 			yield return null;
 		}
 

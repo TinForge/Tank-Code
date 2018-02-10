@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Tank_Particles : MonoBehaviour {
-
-	// Use this for initialization
+public class Tank_Particles : TankComponent {
 	void Start () {
-		
+
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
-		
+
 	}
+
+	public void PlayProperty (ParticleSystem particle) {
+		if (!particle.isPlaying) {
+			particle.Play ();
+		}
+	}
+
 }

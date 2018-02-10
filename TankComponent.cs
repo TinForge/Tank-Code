@@ -2,17 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TankComponent : MonoBehaviour
-{
+public class TankComponent : MonoBehaviour {
 
 	protected TankController controller;
+	protected Tank_Health health;
 	new protected Tank_Audio audio;
 	protected Tank_Particles particle;
 
-	protected bool grounded { get { return controller.grounded; } }
-	protected bool canMove { get { return controller.canMove; } }
-	protected bool canTrack { get { return controller.canTrack; } }
-	protected bool canShoot { get { return controller.canShoot; } }
+	protected Hull_Traverse hull_traverse;
+	protected Turret_Traverse turret_traverse;
+	protected Cannon_Traverse cannon_traverse;
+	protected Tracks tracks;
+	protected Cannon cannon; //name is not the greatest
+
+	protected bool KeyboardActive { get { return controller.KeyboardActive; } }
+	protected bool MouseActive { get { return controller.MouseActive; } }
+	protected bool IsGrounded { get { return tracks.IsGrounded; } }
+	protected bool IsReloading { get { return cannon.IsReloading; } }
 
 	new protected Transform transform { get { return controller.transform; } }
 	protected Transform hull { get { return controller.hull; } }
@@ -25,21 +31,26 @@ public class TankComponent : MonoBehaviour
 
 	protected Rigidbody rb { get { return controller.rb; } }
 
-	void Awake()
-	{
-		controller = gameObject.transform.root.GetComponent<TankController>();
-		audio = gameObject.transform.root.GetComponent<Tank_Audio>();
-		particle = gameObject.transform.root.GetComponent<Tank_Particles>();
+	void Awake () {
+		cannon = GetComponent<Cannon> ();
+		hull = GetComponent<Hull_Traverse> ();
+		turret = GetComponent<Turret_Traverse> ();
+		tracks = GetComponent<Tracks> ();
+
+		controller = gameObject.transform.root.GetComponent<TankController> ();
+		health = gameObject.transform.root.GetComponent<Tank_Health> ();
+		audio = gameObject.transform.root.GetComponent<Tank_Audio> ();
+		particle = gameObject.transform.root.GetComponent<Tank_Particles> ();
+
+		health.OnHit += Hit;
+		health.OnHit += Hit;
 	}
 
-
-	protected virtual void Damage()
-	{
+	protected virtual void Hit () {
 
 	}
 
-	protected virtual void Destroy()
-	{
+	protected virtual void Destroy () {
 
 	}
 
