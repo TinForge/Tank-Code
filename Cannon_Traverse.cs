@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Cannon_Traverse : TankComponent
 {
@@ -6,6 +7,8 @@ public class Cannon_Traverse : TankComponent
 	[SerializeField] private float bufferAngle = 1.0f;
 	[SerializeField] private float maxElev = 15.0f;
 	[SerializeField] private float maxDep = 10.0f;
+
+	public event Action OnCannonTraverse;
 
 	Vector3 targetPos;
 	Vector3 localTargetPos;
@@ -20,7 +23,7 @@ public class Cannon_Traverse : TankComponent
 
 	public void Traverse()
 	{
-		if (canTrack)
+		if (KeyboardActive)
 		{
 			targetPos = MouseControl.Point();
 			localTargetPos = gun.InverseTransformPoint(targetPos);

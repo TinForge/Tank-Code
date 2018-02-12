@@ -16,6 +16,8 @@ public class TankController : MonoBehaviour {
 	public Transform[] leftWheels = new Transform[8];
 	public Transform[] rightWheels = new Transform[8];
 
+	public GameObject shell;
+
 	[Header ("Components")]
 	public Rigidbody rb;
 

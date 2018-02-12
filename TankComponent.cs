@@ -1,13 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class TankComponent : MonoBehaviour {
+public class TankComponent : MonoBehaviour
+{
 
 	protected TankController controller;
 	protected Tank_Health health;
 	new protected Tank_Audio audio;
 	protected Tank_Particles particle;
+	protected Tank_Recoil recoil;
 
 	protected Hull_Traverse hull_traverse;
 	protected Turret_Traverse turret_traverse;
@@ -15,8 +15,8 @@ public class TankComponent : MonoBehaviour {
 	protected Tracks tracks;
 	protected Cannon cannon; //name is not the greatest
 
-	protected bool KeyboardActive { get { return controller.KeyboardActive; } }
-	protected bool MouseActive { get { return controller.MouseActive; } }
+	protected bool KeyboardActive { get { return controller.KeyboardInput; } }
+	protected bool MouseActive { get { return controller.MouseInput; } }
 	protected bool IsGrounded { get { return tracks.IsGrounded; } }
 	protected bool IsReloading { get { return cannon.IsReloading; } }
 
@@ -29,28 +29,35 @@ public class TankComponent : MonoBehaviour {
 	protected Transform[] leftWheels { get { return controller.leftWheels; } }
 	protected Transform[] rightWheels { get { return controller.rightWheels; } }
 
+	public GameObject shell { get { return controller.shell; } }
+
 	protected Rigidbody rb { get { return controller.rb; } }
 
-	void Awake () {
-		cannon = GetComponent<Cannon> ();
-		hull = GetComponent<Hull_Traverse> ();
-		turret = GetComponent<Turret_Traverse> ();
-		tracks = GetComponent<Tracks> ();
+	protected virtual void Awake()
+	{
+		cannon = gameObject.transform.root.GetComponentInChildren<Cannon>();
+		hull_traverse = gameObject.transform.root.GetComponentInChildren<Hull_Traverse>();
+		turret_traverse = gameObject.transform.root.GetComponentInChildren<Turret_Traverse>();
+		cannon_traverse = gameObject.transform.root.GetComponentInChildren<Cannon_Traverse>();
+		recoil = gameObject.transform.root.GetComponentInChildren<Tank_Recoil>();
 
-		controller = gameObject.transform.root.GetComponent<TankController> ();
-		health = gameObject.transform.root.GetComponent<Tank_Health> ();
-		audio = gameObject.transform.root.GetComponent<Tank_Audio> ();
-		particle = gameObject.transform.root.GetComponent<Tank_Particles> ();
+		controller = gameObject.transform.root.GetComponentInChildren<TankController>();
+		health = gameObject.transform.root.GetComponentInChildren<Tank_Health>();
+		audio = gameObject.transform.root.GetComponentInChildren<Tank_Audio>();
+		particle = gameObject.transform.root.GetComponentInChildren<Tank_Particles>();
+		tracks = gameObject.transform.root.GetComponentInChildren<Tracks>();
 
 		health.OnHit += Hit;
 		health.OnHit += Hit;
 	}
 
-	protected virtual void Hit () {
+	protected virtual void Hit()
+	{
 
 	}
 
-	protected virtual void Destroy () {
+	protected virtual void Destroy()
+	{
 
 	}
 

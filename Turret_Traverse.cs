@@ -1,17 +1,19 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Turret_Traverse : TankComponent
 {
-
 	[SerializeField] private float traverseSpeed = 15.0f;
 	[SerializeField] private float bufferAngle = 5.0f;
 	[SerializeField] private float acceleration_Time = 0.2f;
+
+	public event Action OnTurretTraverse;
 
 	Vector3 targetPos;
 	Vector3 localTargetPos;
 	float targetAng;
 	float speedRate;
-	float currentTurretAng;
+	float currentAng;
 
 	private void Update()
 	{
@@ -20,7 +22,7 @@ public class Turret_Traverse : TankComponent
 
 	public void Traverse()
 	{
-		if (canTrack)
+		if (MouseActive)
 		{
 			targetPos = MouseControl.Point();
 			localTargetPos = turret.InverseTransformPoint(targetPos);
@@ -29,7 +31,7 @@ public class Turret_Traverse : TankComponent
 		}
 		else
 		{
-			targetAng = Mathf.DeltaAngle(currentTurretAng, 0.0f);
+			targetAng = Mathf.DeltaAngle(currentAng, 0.0f);
 		}
 
 
@@ -40,8 +42,8 @@ public class Turret_Traverse : TankComponent
 			// Calculate Rate
 			speedRate = Mathf.MoveTowardsAngle(speedRate, targetSpeedRate, Time.fixedDeltaTime / acceleration_Time);
 			// Rotate
-			currentTurretAng += traverseSpeed * speedRate * Time.fixedDeltaTime;
-			turret.localRotation = Quaternion.Euler(new Vector3(0.0f, currentTurretAng, 0.0f));
+			currentAng += traverseSpeed * speedRate * Time.fixedDeltaTime;
+			turret.localRotation = Quaternion.Euler(new Vector3(0.0f, currentAng, 0.0f));
 		}
 
 	}

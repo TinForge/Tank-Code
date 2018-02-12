@@ -1,15 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Tank_Particles : TankComponent {
-	void Start () {
 
+	[SerializeField] private ParticleSystem shoot;
+
+
+	private void Start()
+	{
+		cannon.OnShoot += Shoot;
 	}
 
-	void Update () {
-
+	private void OnDisable()
+	{
+		cannon.OnShoot -= Shoot;
 	}
+
+
+	private void Shoot()
+	{
+		shoot.Play();
+	}
+
 
 	public void PlayProperty (ParticleSystem particle) {
 		if (!particle.isPlaying) {
