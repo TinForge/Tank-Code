@@ -1,70 +1,65 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class Shell : MonoBehaviour
-{
+public class Shell : MonoBehaviour {
+
 	public const int LifeTime = 5;
 	public const int Speed = 100;
 
-	bool collided;
+	public string player;
 
-	[SerializeField] private Rigidbody rb;
+	private Rigidbody rb;
+
 	[SerializeField] private AudioSource audioSource;
 	[SerializeField] private ParticleSystem particleSystem;
 
-	void Start()
-	{
-		StartCoroutine(Stuff());
+	bool hit;
+
+	void Awake () {
+		rb = GetComponent<Rigidbody> ();
 	}
 
-	private void FixedUpdate()
-	{
-		if (!collided)
-			rb.velocity = transform.up * Speed;//, ForceMode.VelocityChange);
+	void Start () {
+		StartCoroutine (Live ());
 	}
 
-	private IEnumerator Stuff()
-	{
+	private void FixedUpdate () {
+		if (!hit)
+			rb.velocity = transform.up * Speed;
+	}
+
+	private IEnumerator Live () {
 		float t = 0;
-		while (t <= LifeTime || particleSystem.isPlaying ||audioSource.isPlaying)
-		{
+		while (t <= LifeTime || particleSystem.isPlaying || audioSource.isPlaying) {
 			t += Time.deltaTime;
 			yield return null;
 		}
-		DestroyObject(gameObject);
+		DestroyObject (gameObject);
 	}
 
-	private void Explode()
-	{
-		GetComponent<MeshRenderer>().enabled = false;
-		GetComponent<Collider>().enabled = false;
-		particleSystem.Play();
-		audioSource.Play();
+	private void Explode () {
+		GetComponent<MeshRenderer> ().enabled = false;
+		GetComponent<Collider> ().enabled = false;
+		particleSystem.Play ();
+		audioSource.Play ();
 	}
 
-
-	private void OnCollisionEnter(Collision collision)
-	{
+	private void OnCollisionEnter (Collision collision) {
 		transform.position = collision.contacts[0].point;
-		rb.drag = 3;
-		collided = true;
-		Explode();
+		rb.drag = 3; //drag could be 3 automatically.
+		hit = true;
+		Explode ();
 		//if(Photon.isServer)
 		//if(collision.hit == a tank)
-		//SendHit (collision);
+		SendHit (collision.transform, transform.position);
 	}
 
-	//Start position and spawn time Photon
-	//Move forward
-	//On hit - Destroy & special effects
-	//if server client, send hit RPC on 
+	public void SendHit (transform other, Vector3 pos) {
 
-	public void SendHit()
-	{
-
-		//int damage = RNG();
+		int damage = RNG.Damage ();
+		other.GetComponent<Tank_Health> ().Hit (player, damage, pos);
 		//! RPC call from reference HERE?
-		//! Call on Health, and have it RPC it  THERE?
+		//! Call on Health, and have it RPC it THERE?
 
 	}
 

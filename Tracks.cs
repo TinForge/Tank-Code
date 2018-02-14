@@ -1,16 +1,13 @@
 ﻿using UnityEngine;
 
-public class Tracks : TankComponent
-{
-
+public class Tracks : TankComponent {
 	public bool leftGrounded;
 	public bool rightGrounded;
 
 	public bool IsGrounded { get { return (leftGrounded || rightGrounded); } }
 
-	private void OnCollisionStay(Collision collision)
-	{
-		leftGrounded = rightGrounded = false;
+	private void OnCollisionStay (Collision collision) {
+		leftGrounded = rightGrounded = false; //necessary?
 
 		if (collision.contacts[0].thisCollider.name == "Left Wheels")
 			leftGrounded = true;
@@ -18,8 +15,7 @@ public class Tracks : TankComponent
 			rightGrounded = true;
 	}
 
-	private void OnCollisionExit()
-	{
+	private void OnCollisionExit () {
 		leftGrounded = rightGrounded = false;
 	}
 

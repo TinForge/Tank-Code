@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TankController : MonoBehaviour {
+
+	[Header ("Player")]
+	public string player;
+	public bool isControlling;
+
 	[Header ("Flags")]
 	public bool KeyboardInput = true; //Keyboard input active?
 	public bool MouseInput = true; //Mouse input active?

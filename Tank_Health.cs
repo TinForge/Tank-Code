@@ -1,22 +1,24 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Tank_Health : TankComponent
-{
+public class Tank_Health : TankComponent {
 
-	private int hp;
+	public int HP { get; private set; }
 
-	public int HP { get { return hp; } }
+	public bool IsAlive { get { return HP > 0; } }
 
 	public event Action OnHit;
 	public event Action OnDestroy;
 
-	public void Hit(string player, int damage)
-	{
-		//if ()
+	public void Hit (string player, int damage, Vector3 hitPos) {
+		if (HP < 1)
+			return;
 
+		HP -= damage;
+		if (HP < 1)
+			OnDestroy ();
+		else
+			OnHit ();
 	}
 
 }

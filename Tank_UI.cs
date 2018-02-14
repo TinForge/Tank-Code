@@ -15,7 +15,14 @@ public class Tank_UI : TankComponent {
 	[SerializeField] private Text speedText;
 	[SerializeField] private Image speedImage;
 
-	void Awake () { }
+	void Awake () {
+
+	}
+
+	void Start () {
+
+		cannon.
+	}
 
 	void Update () {
 
