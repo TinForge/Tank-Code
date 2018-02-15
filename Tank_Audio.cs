@@ -8,6 +8,8 @@ public class Tank_Audio : TankComponent
 	[SerializeField] private AudioClip turretTraverse;
 	[SerializeField] private AudioClip cannonTraverse;
 	[SerializeField] private AudioClip shoot;
+	[SerializeField] private AudioClip hit;
+	[SerializeField] private AudioClip dead;
 
 	float engineRate;
 
@@ -23,6 +25,8 @@ public class Tank_Audio : TankComponent
 		//turret_traverse.OnTurretTraverse += TurretTraverse;
 		//cannon_traverse.OnCannonTraverse += CannonTraverse;
 		cannon.OnShoot += Shoot;
+		health.OnHit += Hit;
+		health.OnDestroy+= Destroy;
 	}
 
 	private void OnDisable()
@@ -31,6 +35,7 @@ public class Tank_Audio : TankComponent
 		turret_traverse.OnTurretTraverse -= TurretTraverse;
 		cannon_traverse.OnCannonTraverse -= CannonTraverse;
 		cannon.OnShoot -= Shoot;
+		health.OnDestroy -= Destroy;
 	}
 
 	private void HullTraverse(float inputVertical,float inputHorizontal)
@@ -54,6 +59,15 @@ public class Tank_Audio : TankComponent
 		source.PlayOneShot(shoot);
 	}
 
+	private void Hit(Vector3 redundant)
+	{
+		source.PlayOneShot(hit);
+	}
+
+	private void Destroy()
+	{
+		source.PlayOneShot(dead);
+	}
 
 	public void Play(AudioClip clip)
 	{

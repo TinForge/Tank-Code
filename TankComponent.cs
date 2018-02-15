@@ -14,7 +14,7 @@ public class TankComponent : MonoBehaviour {
 	protected Cannon cannon; //name is not the greatest
 	protected Tracks tracks;
 
-	protected bool IsControlling { get { return controller.IsControlling; } }
+	protected bool IsControlling { get { return controller.isControlling; } }
 	protected bool KeyboardActive { get { return controller.KeyboardInput; } }
 	protected bool MouseActive { get { return controller.MouseInput; } }
 	protected bool IsAlive { get { return health.IsAlive; } }
@@ -46,16 +46,7 @@ public class TankComponent : MonoBehaviour {
 		cannon = gameObject.transform.root.GetComponentInChildren<Cannon> ();
 		tracks = gameObject.transform.root.GetComponentInChildren<Tracks> ();
 
-		health.OnHit += Hit;
-		health.OnHit += Hit;
 	}
 
-	protected virtual void Hit () {
-
-	}
-
-	protected virtual void Destroy () {
-
-	}
 
 }

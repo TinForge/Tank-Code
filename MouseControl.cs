@@ -8,8 +8,6 @@ public class MouseControl : MonoBehaviour
 
 	public static Vector3 Point()
 	{
-		//deltaMouseAng += (Input.mousePosition - previousMousePos) * 0.03f;
-		//previousMousePos = Input.mousePosition;
 		Vector3 screenPos = Input.mousePosition;
 
 		Ray ray = Camera.main.ScreenPointToRay(screenPos);
@@ -27,4 +25,9 @@ public class MouseControl : MonoBehaviour
 		return targetPos;
 	}
 
+
+	public static void SetCursor(Texture2D reticle, Vector2 center)
+	{
+		Cursor.SetCursor(reticle, center, CursorMode.ForceSoftware);
+	}
 }

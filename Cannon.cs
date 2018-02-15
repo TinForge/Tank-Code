@@ -10,6 +10,7 @@ public class Cannon : TankComponent
 	[SerializeField] private Vector3 gunRecoilPos = new Vector3(0, 0, 0.2f);
 
 	new public bool IsReloading { get; private set; }
+	public float CoolDown { get; private set; }
 
 	public event Action OnShoot;
 	
@@ -17,12 +18,14 @@ public class Cannon : TankComponent
 
 	private void Update()
 	{
-		Shoot();
+		if (IsControlling && IsAlive &&MouseActive)
+			Shoot();
 	}
+
 
 	public void Shoot()
 	{
-		if (!KeyboardActive || IsReloading)
+		if (IsReloading)
 			return;
 
 		if (Input.GetAxis("Fire1") == 1)
@@ -51,6 +54,7 @@ public class Cannon : TankComponent
 		while (t <= reloadTime)
 		{
 			t += Time.deltaTime;
+			CoolDown = Mathf.Clamp(1 - (t/reloadTime) ,0,1);
 			yield return null;
 		}
 		IsReloading = false;

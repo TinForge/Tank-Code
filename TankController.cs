@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class TankController : MonoBehaviour {
@@ -22,11 +21,14 @@ public class TankController : MonoBehaviour {
 	public Transform[] rightWheels = new Transform[8];
 
 	public GameObject shell;
+	public Texture2D aimReticle;
 
 	[Header ("Components")]
 	public Rigidbody rb;
 
 	void Start () {
+		MouseControl.SetCursor(aimReticle, new Vector2(16, 16));
+
 		leftWheels = FindWheels (transform.Find ("Left Wheels"));
 		rightWheels = FindWheels (transform.Find ("Right Wheels"));
 	}

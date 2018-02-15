@@ -23,19 +23,33 @@ public class CameraFollow : MonoBehaviour
 
 	// The target we are following
 	[SerializeField]private Transform target;
-	[SerializeField]private Vector3 offset;
+	new private Camera camera;
 
+	[SerializeField] private float lerp = 0f;
+	//offset where the camera should be centered on
+	[SerializeField] private float offset = 1;
+	[SerializeField] private float minOffset = 3f;
+	[SerializeField] private float maxOffset = 4.5f;
 	// The distance in the x-z plane to the target
 	[SerializeField]private float distance = 5;
 	[SerializeField]private float minDistance = 5f;
 	[SerializeField]private float maxDistance = 15f;
 	// the height we want the camera to be above the target
-	[SerializeField]private float height = 5.0f;
+	[SerializeField]private float height = 3f;
+	[SerializeField] private float minHeight = 3f;
+	[SerializeField] private float maxHeight = 5f;
+
+
 	// How much we dampen
 	[SerializeField]private float heightDamping = 2.0f;
 	[SerializeField]private float rotationDamping = 3.0f;
 
 	#endregion
+
+	private void Awake()
+	{
+		camera = GetComponent<Camera>();
+	}
 
 	public Transform Target {
 		set {
@@ -76,7 +90,13 @@ public class CameraFollow : MonoBehaviour
 
 	private void FollowPlayer ()
 	{
-		distance = Mathf.Clamp (distance - Input.GetAxis ("Mouse ScrollWheel") * 8, minDistance, maxDistance);
+		lerp = Mathf.Clamp(lerp - Input.GetAxis("Mouse ScrollWheel"), 0, 1);
+		distance = Mathf.Lerp (minDistance, maxDistance, lerp);
+		height = Mathf.Lerp(minHeight, maxHeight, lerp);
+		offset = Mathf.Lerp(minOffset, maxOffset, lerp);
+		camera.fieldOfView = Mathf.Lerp(30, 60, lerp);
+
+
 		// Calculate the current rotation angles
 		float wantedRotationAngle = target.eulerAngles.y;
 		float wantedHeight = target.position.y + height;
@@ -95,6 +115,6 @@ public class CameraFollow : MonoBehaviour
 		// Set the height of the camera
 		transform.position = new Vector3 (transform.position.x, currentHeight, transform.position.z);
 		// Always look at the target
-		transform.LookAt (target.position + offset);
+		transform.LookAt (target.position + Vector3.up*offset);
 	}
 }

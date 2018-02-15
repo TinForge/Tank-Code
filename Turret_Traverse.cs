@@ -17,22 +17,23 @@ public class Turret_Traverse : TankComponent
 
 	private void Update()
 	{
+		if(IsControlling && IsAlive && MouseActive)
 		Traverse();
 	}
 
 	public void Traverse()
 	{
-		if (MouseActive)
-		{
+		//if (MouseActive)
+		//{
 			targetPos = MouseControl.Point();
 			localTargetPos = turret.InverseTransformPoint(targetPos);
 			targetAng = Vector2.Angle(Vector2.up, new Vector2(localTargetPos.x, localTargetPos.z)) * Mathf.Sign(localTargetPos.x);
 			//targetAng += deltaMouseAng.x;
-		}
-		else
-		{
-			targetAng = Mathf.DeltaAngle(currentAng, 0.0f);
-		}
+	//	}
+		//else
+		//{
+		//	targetAng = Mathf.DeltaAngle(currentAng, 0.0f);
+		//}
 
 
 		if (Mathf.Abs(targetAng) > 0.01f)

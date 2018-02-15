@@ -7,7 +7,8 @@ public class Tracks : TankComponent {
 	public bool IsGrounded { get { return (leftGrounded || rightGrounded); } }
 
 	private void OnCollisionStay (Collision collision) {
-		leftGrounded = rightGrounded = false; //necessary?
+
+			leftGrounded = rightGrounded = false; //necessary?
 
 		if (collision.contacts[0].thisCollider.name == "Left Wheels")
 			leftGrounded = true;

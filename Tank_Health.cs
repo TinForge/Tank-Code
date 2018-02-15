@@ -3,14 +3,22 @@ using UnityEngine;
 
 public class Tank_Health : TankComponent {
 
+	public const int MaxHealth=100;
+
 	public int HP { get; private set; }
 
-	public bool IsAlive { get { return HP > 0; } }
+	new public bool IsAlive { get { return HP > 0; } }
 
-	public event Action OnHit;
+	public event Action<Vector3> OnHit;
 	public event Action OnDestroy;
 
-	public void Hit (string player, int damage, Vector3 hitPos) {
+	private void Start()
+	{
+		HP = 100;
+	}
+
+
+	public void Hit (string player, int damage, Vector3 hitDirection) {
 		if (HP < 1)
 			return;
 
@@ -18,7 +26,7 @@ public class Tank_Health : TankComponent {
 		if (HP < 1)
 			OnDestroy ();
 		else
-			OnHit ();
+			OnHit (hitDirection);
 	}
 
 }

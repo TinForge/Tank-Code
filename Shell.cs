@@ -19,7 +19,7 @@ public class Shell : MonoBehaviour {
 		rb = GetComponent<Rigidbody> ();
 	}
 
-	void Start () {
+	void Start () { 
 		StartCoroutine (Live ());
 	}
 
@@ -46,18 +46,18 @@ public class Shell : MonoBehaviour {
 
 	private void OnCollisionEnter (Collision collision) {
 		transform.position = collision.contacts[0].point;
-		rb.drag = 3; //drag could be 3 automatically.
 		hit = true;
 		Explode ();
 		//if(Photon.isServer)
-		//if(collision.hit == a tank)
-		SendHit (collision.transform, transform.position);
+		Tank_Health tank = collision.transform.root.GetComponent<Tank_Health>();
+		if (tank != null)
+			SendHit(tank, transform.position);//collision.transform.InverseTransformPoint(transform.position));
 	}
 
-	public void SendHit (transform other, Vector3 pos) {
+	public void SendHit (Tank_Health tank, Vector3 pos) {
 
 		int damage = RNG.Damage ();
-		other.GetComponent<Tank_Health> ().Hit (player, damage, pos);
+		tank.Hit (player, damage, pos);
 		//! RPC call from reference HERE?
 		//! Call on Health, and have it RPC it THERE?
 
