@@ -3,7 +3,6 @@
 public class MouseControl : MonoBehaviour
 {
 	private static Vector3 previousMousePos;
-	//private static Vector3 deltaMouseAng;
 	private static Vector3 targetPos;
 
 	public static Vector3 Point()

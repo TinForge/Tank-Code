@@ -1,47 +1,82 @@
-﻿
+﻿using System;
 using UnityEngine;
+namespace TinForge.TankController
+{
+	//Goes on root transform of tank
+	public class TankController : MonoBehaviour
+	{
+		[Header("Player")]
+		new public string name;
+		public bool isPlayer;
+		public bool isControlling;
 
-public class TankController : MonoBehaviour {
+		[Header("Transforms")]
+		public Transform hull;
+		[Tooltip("Y Axis movement")] public Transform turret;
+		[Tooltip("X Axis movement")] public Transform gun;
+		[Tooltip("Gun recoil")] public Transform barrel;
+		[Tooltip("End of Barrel")] public Transform muzzle;
+		public Transform[] leftTrackWheels = new Transform[2];
+		public Transform[] rightTrackWheels = new Transform[2];
+		public Transform[] leftWheels = new Transform[6];
+		public Transform[] rightWheels = new Transform[6];
 
-	[Header ("Player")]
-	public string player;
-	public bool isControlling;
+		[Header("Input")]
+		[HideInInspector] public float inputVertical;
+		[HideInInspector] public float inputHorizontal;
+		[HideInInspector] public Vector3 mousePos;
+		[HideInInspector] public bool mouseClick;
 
-	[Header ("Flags")]
-	public bool KeyboardInput = true; //Keyboard input active?
-	public bool MouseInput = true; //Mouse input active?
+		[Header("Assets")]
+		public GameObject shell;
+		public Texture2D aimReticle;
 
-	[Header ("Transforms")]
-	public Transform hull;
-	public Transform turret;
-	public Transform mantlet;
-	public Transform gun;
-	public Transform muzzle;
-	public Transform[] leftWheels = new Transform[8];
-	public Transform[] rightWheels = new Transform[8];
+		[Header("Components")]
+		[HideInInspector] public Rigidbody rb;
 
-	public GameObject shell;
-	public Texture2D aimReticle;
 
-	[Header ("Components")]
-	public Rigidbody rb;
+		//---
 
-	void Start () {
-		MouseControl.SetCursor(aimReticle, new Vector2(16, 16));
+		void Start()
+		{
+			MouseControl.SetCursor(aimReticle, new Vector2(16, 16));
+			rb = gameObject.transform.root.GetComponentInChildren<Rigidbody>();
+		}
 
-		leftWheels = FindWheels (transform.Find ("Left Wheels"));
-		rightWheels = FindWheels (transform.Find ("Right Wheels"));
+		private void Update()
+		{
+			if (isPlayer && isControlling)
+				GetInput();
+		}
+
+
+		//---
+
+		private void GetInput()
+		{
+			inputVertical = Input.GetAxis("Vertical");
+			inputHorizontal = Input.GetAxis("Horizontal");
+			mouseClick = Input.GetAxis("Fire1") == 1 ? true : false;
+			mousePos = MouseControl.Point();
+		}
+
+		#region Collision
+
+		//Events *Since collisions get called to root only
+		public event Action<Collision> CollisionStay;
+		public event Action CollisionExit;
+
+		private void OnCollisionStay(Collision collision)
+		{
+			if (CollisionStay != null)
+				CollisionStay(collision);
+		}
+
+		private void OnCollisionExit()
+		{
+			if (CollisionExit != null)
+				CollisionExit();
+		}
+		#endregion
 	}
-
-	private Transform[] FindWheels (Transform parent) {
-		Transform[] wheels = new Transform[parent.childCount];
-
-		for (int i = 0; i < parent.childCount; i++)
-			wheels[i] = parent.GetChild (i);
-
-		return wheels;
-	}
-
-	//OnHit
-	//
 }
